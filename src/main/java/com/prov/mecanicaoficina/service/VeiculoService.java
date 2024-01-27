@@ -44,7 +44,6 @@ public class VeiculoService {
     public Veiculo atualizarVeiculo(Long id, VeiculoDTO veiculoDTO) {
         Veiculo veiculo = obterVeiculoPorId(id);
 
-        // Atualizar as propriedades de veiculo com base nas propriedades de veiculoDTO
         veiculo.setModelo(veiculoDTO.getModelo());
         veiculo.setMarca(veiculoDTO.getMarca());
         veiculo.setAnoFabricacao(veiculoDTO.getAnoFabricacao());

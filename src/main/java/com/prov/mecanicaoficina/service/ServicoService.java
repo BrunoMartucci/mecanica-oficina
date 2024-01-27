@@ -41,7 +41,6 @@ public class ServicoService {
     public Servico atualizarServico(Long id, ServicoDTO servicoDTO) {
         Servico servico = obterServicoPorId(id);
 
-        // Atualizar as propriedades de servico com base nas propriedades de servicoDTO
         servico.setNome(servicoDTO.getNome());
         servico.setPrecoMaoDeObra(servicoDTO.getPrecoMaoDeObra());
 

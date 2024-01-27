@@ -8,6 +8,4 @@ public class PecaDTO {
     private String fabricante;
     private Integer quantidadeEstoque;
     private BigDecimal precoUnitario;
-
-    // Getters and Setters
 }

@@ -42,7 +42,6 @@ public class ClienteService {
     public Cliente atualizarCliente(Long id, ClienteDTO clienteDTO) {
         Cliente cliente = obterClientePorId(id);
 
-        // Atualizar as propriedades de cliente com base nas propriedades de clienteDTO
         cliente.setNome(clienteDTO.getNome());
         cliente.setCpf(clienteDTO.getCpf());
 

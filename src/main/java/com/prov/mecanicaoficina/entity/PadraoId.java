@@ -15,8 +15,6 @@ public class PadraoId {
     private Long id;
 
     private LocalDateTime dataCadastro = LocalDateTime.now();
-
-    // Getters and Setters
 }
 
 

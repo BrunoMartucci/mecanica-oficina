@@ -17,7 +17,6 @@ public class PecaService {
     private PecaRepository pecaRepository;
 
     public Peca criarPeca(Peca peca) {
-        // Lógica de validação, se necessário
         return (Peca) pecaRepository.save(peca);
     }
 
@@ -37,13 +36,40 @@ public class PecaService {
     public Peca atualizarPeca(Long id, Peca pecaAtualizada) {
         Peca pecaExistente = obterPecaPorId(id);
 
-        // Atualizar as propriedades da pecaExistente com base nas propriedades de pecaAtualizada
-
         return (Peca) pecaRepository.save(pecaExistente);
     }
+    public void deletarPeca(Long pecaId) {
+        Peca peca = obterPecaPorId(pecaId);
 
-    public void deletarPeca(Long id) {
-        Peca peca = obterPecaPorId(id);
+        if (peca.getQuantidadeEstoque() != 0) {
+            throw new IllegalStateException("Não é possível excluir a peça, pois ela já teve movimentação no estoque.");
+        }
+
         pecaRepository.delete(peca);
     }
+    public Peca realizarEntradaEstoque(Long pecaId, int quantidade) {
+        Peca peca = obterPecaPorId(pecaId);
+
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade de entrada deve ser maior que zero.");
+        }
+
+        peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() + quantidade);
+
+        return (Peca) pecaRepository.save(peca);
+    }
+
+    public Peca realizarSaidaEstoque(Long pecaId, int quantidade) {
+        Peca peca = obterPecaPorId(pecaId);
+
+        if (quantidade > peca.getQuantidadeEstoque()) {
+            throw new IllegalArgumentException("Estoque insuficiente para realizar a saída.");
+        }
+
+        peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() - quantidade);
+
+        return (Peca) pecaRepository.save(peca);
+    }
 }
+
+
