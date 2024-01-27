@@ -17,6 +17,10 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    public ClienteController(ClienteService clienteService) {
+        this.clienteService = clienteService;
+    }
+
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {
         List<Cliente> clientes = clienteService.listarClientes();
@@ -45,6 +49,11 @@ public class ClienteController {
     public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
         clienteService.deletarCliente(id);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping
+    public ResponseEntity<List<ClienteDTO>> listarClientesPorNome(@RequestParam String nome) {
+        List<ClienteDTO> clientesDTO = clienteService.listarClientesPorNome(nome);
+        return ResponseEntity.ok(clientesDTO);
     }
 }
 

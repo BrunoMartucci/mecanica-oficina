@@ -1,6 +1,6 @@
 package com.prov.mecanicaoficina.service;
 
-import com.prov.mecanicaoficina.dto.OrdemServicoDTO;
+import com.prov.mecanicaoficina.dto.*;
 import com.prov.mecanicaoficina.entity.*;
 import com.prov.mecanicaoficina.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdemServicoService {
@@ -33,6 +34,11 @@ public class OrdemServicoService {
     private VeiculoService veiculoService;
     @Autowired
     private ClienteService clienteService;
+
+
+    public OrdemServicoService(OrdemServicoRepository ordemServicoRepository) {
+        this.ordemServicoRepository = ordemServicoRepository;
+    }
 
     public List<OrdemServico> listarOrdensServico() {
         return ordemServicoRepository.findAll();
@@ -159,5 +165,75 @@ public class OrdemServicoService {
         } else {
             throw new IllegalStateException("A OrdemServico está fora do período permitido para exclusão.");
         }
+    }
+
+    public List<OrdemServicoDTO> listarOrdensServicoAbertas() {
+        List<OrdemServico> ordensServicoAbertas = ordemServicoRepository.findOrdensServicoAbertas();
+        // Converte para DTO se necessário
+        return converterParaDTO(ordensServicoAbertas);
+    }
+
+    private OrdemServicoDTO converterParaDTO(OrdemServico ordemServico) {
+        OrdemServicoDTO dto = new OrdemServicoDTO();
+        dto.setServicoId(ordemServico.getServico().getId());
+
+        // Convertendo o Servico para ServicoDTO
+        ServicoDTO servicoDTO = new ServicoDTO();
+        servicoDTO.setId(ordemServico.getServico().getId());
+        servicoDTO.setNome(ordemServico.getServico().getNome());
+        servicoDTO.setPrecoMaoDeObra(ordemServico.getServico().getPrecoMaoDeObra());
+        dto.setServicoId(servicoDTO.getId());
+
+        // Convertendo a Peca para PecaDTO, se existir
+        if (ordemServico.getPeca() != null) {
+            PecaDTO pecaDTO = new PecaDTO();
+            pecaDTO.setId(ordemServico.getPeca().getId());
+            pecaDTO.setNome(ordemServico.getPeca().getNome());
+            pecaDTO.setFabricante(ordemServico.getPeca().getFabricante());
+            pecaDTO.setQuantidadeEstoque(ordemServico.getPeca().getQuantidadeEstoque());
+            pecaDTO.setPrecoUnitario(ordemServico.getPeca().getPrecoUnitario());
+            dto.setPeca(pecaDTO);
+            dto.setQuantidadePeca(ordemServico.getQuantidadePeca());
+        }
+
+        // Convertendo o Veiculo para VeiculoDTO
+        VeiculoDTO veiculoDTO = new VeiculoDTO();
+        veiculoDTO.setId(ordemServico.getVeiculo().getId());
+        veiculoDTO.setModelo(ordemServico.getVeiculo().getModelo());
+        veiculoDTO.setMarca(ordemServico.getVeiculo().getMarca());
+        veiculoDTO.setAnoFabricacao(ordemServico.getVeiculo().getAnoFabricacao());
+        veiculoDTO.setKmRodados(ordemServico.getVeiculo().getKmRodados());
+        dto.setVeiculo(veiculoDTO);
+
+        // Convertendo o Cliente para ClienteDTO
+        ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setId(ordemServico.getCliente().getId());
+        clienteDTO.setNome(ordemServico.getCliente().getNome());
+        clienteDTO.setCpf(ordemServico.getCliente().getCpf());
+        dto.setCliente(clienteDTO);
+
+        dto.setDataInicio(ordemServico.getDataInicio());
+        dto.setDataFinalizacao(ordemServico.getDataFinalizacao());
+
+        return dto;
+    }
+    public List<OrdemServicoDTO> listarOrdensServicoFinalizadas() {
+        List<OrdemServico> ordensServicoFinalizadas = ordemServicoRepository.findOrdensServicoFinalizadas();
+        return ordensServicoFinalizadas.stream()
+                .map(this::converterParaDTO)
+                .collect(Collectors.toList());
+    }
+    public List<OrdemServicoDTO> listarOrdensServicoFiltradas(String nomeCliente) {
+        OrdemServicoDTO dto = new OrdemServicoDTO();
+
+        dto.setId(ordemServico.getId());
+        ServicoDTO servicoDTO = new ServicoDTO();
+        servicoDTO.setId(ordemServico.getServico().getId());
+        servicoDTO.setNome(ordemServico.getServico().getNome());
+        servicoDTO.setPrecoMaoDeObra(ordemServico.getServico().getPrecoMaoDeObra());
+        dto.setServico(servicoDTO);
+
+
+        return (List<OrdemServicoDTO>) dto;
     }
 }

@@ -1,5 +1,6 @@
 package com.prov.mecanicaoficina.api;
 
+import com.prov.mecanicaoficina.dto.PecaDTO;
 import com.prov.mecanicaoficina.entity.Peca;
 import com.prov.mecanicaoficina.service.PecaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,12 @@ public class PecaController {
     public ResponseEntity<Peca> realizarSaidaEstoque(@PathVariable Long pecaId, @PathVariable int quantidade) {
         Peca pecaAtualizada = pecaService.realizarSaidaEstoque(pecaId, quantidade);
         return ResponseEntity.ok(pecaAtualizada);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PecaDTO>> listarPecasPorNome(@RequestParam String nome) {
+        List<PecaDTO> pecasDTO = pecaService.listarPecasPorNome(nome);
+        return ResponseEntity.ok(pecasDTO);
     }
 }
 

@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ServicoService {
@@ -50,5 +51,28 @@ public class ServicoService {
     public void deletarServico(Long id) {
         Servico servico = obterServicoPorId(id);
         servicoRepository.delete(servico);
+    }
+
+    public List<Servico> listarTodosServicos() {
+        return servicoRepository.findAll();
+    }
+
+    public List<Servico> listarServicosPorNome(String nome) {
+        return servicoRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
+    public List<ServicoDTO> listarServicosEmOrdemAlfabetica(String nomeFiltro) {
+        List<Servico> servicos = servicoRepository.findByNomeContainingIgnoreCaseOrderByNome(nomeFiltro);
+        return servicos.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private ServicoDTO convertToDTO(Servico servico) {
+        ServicoDTO dto = new ServicoDTO();
+        dto.setId(servico.getId());
+        dto.setNome(servico.getNome());
+        dto.setPrecoMaoDeObra(servico.getPrecoMaoDeObra());
+        return dto;
     }
 }

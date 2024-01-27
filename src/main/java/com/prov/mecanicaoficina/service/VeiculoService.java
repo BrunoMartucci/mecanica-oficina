@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VeiculoService {
@@ -55,5 +56,16 @@ public class VeiculoService {
     public void deletarVeiculo(Long id) {
         Veiculo veiculo = obterVeiculoPorId(id);
         veiculoRepository.delete(veiculo);
+    }
+
+    public List<VeiculoDTO> listarVeiculosPorModelo(String modelo) {
+        List<Object[]> veiculos = veiculoRepository.findByModeloOrderByModelo("%" + modelo + "%");
+        return convertToDTOList(veiculos);
+    }
+
+    private List<VeiculoDTO> convertToDTOList(List<Object[]> veiculos) {
+        return veiculos.stream()
+                .map(veiculo -> new VeiculoDTO((Long) veiculo[0], (String) veiculo[1], (String) veiculo[2], (Long) veiculo[3], (String) veiculo[4]))
+                .collect(Collectors.toList());
     }
 }

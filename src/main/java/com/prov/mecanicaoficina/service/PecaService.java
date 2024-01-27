@@ -1,5 +1,6 @@
 package com.prov.mecanicaoficina.service;
 
+import com.prov.mecanicaoficina.dto.PecaDTO;
 import com.prov.mecanicaoficina.entity.Peca;
 import com.prov.mecanicaoficina.repository.PecaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PecaService {
@@ -69,6 +71,17 @@ public class PecaService {
         peca.setQuantidadeEstoque(peca.getQuantidadeEstoque() - quantidade);
 
         return (Peca) pecaRepository.save(peca);
+    }
+
+    public List<PecaDTO> listarPecasPorNome(String nome) {
+        List<Peca> pecas = pecaRepository.findByNome(nome);
+        return convertToDTOList(pecas);
+
+        private List<PecaDTO> convertToDTOList(List<Peca> pecas) {
+            return pecas.stream()
+                    .map(peca -> new PecaDTO(peca.geti(), peca.getNome(), peca.getQuantidadeEstoque(), peca.getPrecoUnitario()))
+                    .collect(Collectors.toList());
+        }
     }
 }
 

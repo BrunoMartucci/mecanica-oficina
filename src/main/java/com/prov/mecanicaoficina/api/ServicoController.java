@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/servicos")
@@ -46,5 +48,32 @@ public class ServicoController {
         servicoService.deletarServico(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/ordenados-por-nome")
+    public ResponseEntity<List<ServicoDTO>> listarServicosOrdenadosPorNome(@RequestParam(required = false) String nome) {
+        List<Servico> servicos;
+
+        if (nome != null && !nome.isEmpty()) {
+            servicos = servicoService.listarServicosPorNome(nome);
+        } else {
+            servicos = servicoService.listarTodosServicos();
+        }
+
+        List<ServicoDTO> servicosDTO = servicos.stream()
+                .sorted(Comparator.comparing(Servico::getNome))
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(servicosDTO);
+    }
+
+    private ServicoDTO convertToDTO(Servico servico) {
+        ServicoDTO dto = new ServicoDTO();
+        dto.setId(servico.getId());
+        dto.setNome(servico.getNome());
+        dto.setPrecoMaoDeObra(servico.getPrecoMaoDeObra());
+        return dto;
+    }
 }
+
 

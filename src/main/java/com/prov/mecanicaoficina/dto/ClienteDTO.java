@@ -9,6 +9,9 @@ public class ClienteDTO {
 
     @NotBlank
     private String cpf;
+    public ClienteDTO(String nome) {
+        this.nome = nome;
+    }
 
     public String getNome() {
         return nome;

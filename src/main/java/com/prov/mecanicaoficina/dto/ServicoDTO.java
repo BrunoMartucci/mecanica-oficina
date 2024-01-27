@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 public class ServicoDTO {
 
         @NotBlank
@@ -13,8 +15,16 @@ public class ServicoDTO {
         @NotNull
         private BigDecimal precoMaoDeObra;
 
+
         public String getNome() {
                 return nome;
+        }
+        public Long getId() {
+                return id;
+        }
+
+        public void setId(Long id) {
+                this.id = id;
         }
 
         public void setNome(String nome) {

@@ -1,5 +1,7 @@
 package com.prov.mecanicaoficina.dto;
 
+import com.prov.mecanicaoficina.entity.Cliente;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,6 +18,15 @@ public class VeiculoDTO {
 
         @NotNull
         private Integer kmRodados;
+
+
+    public VeiculoDTO(Long id, String modelo, String marca, Long clienteId, String nomeCliente) {
+        this.id = id;
+        this.modelo = modelo;
+        this.marca = marca;
+        this.clienteId = clienteId;
+        this.nomeCliente = nomeCliente;
+    }
 
         public String getModelo() {
             return modelo;

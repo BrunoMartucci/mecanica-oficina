@@ -17,6 +17,10 @@ public class OrdemServicoController {
     @Autowired
     private OrdemServicoService ordemServicoService;
 
+    public OrdemServicoController(OrdemServicoService ordemServicoService) {
+        this.ordemServicoService = ordemServicoService;
+    }
+
     @GetMapping
     public ResponseEntity<List<OrdemServico>> listarOrdensServico() {
         List<OrdemServico> ordensServico = ordemServicoService.listarOrdensServico();
@@ -46,4 +50,24 @@ public class OrdemServicoController {
         ordemServicoService.excluirOrdemServico(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/abertas")
+    public ResponseEntity<List<OrdemServicoDTO>> listarOrdensServicoAbertas() {
+        List<OrdemServicoDTO> ordensServicoAbertas = ordemServicoService.listarOrdensServicoAbertas();
+        return ResponseEntity.ok(ordensServicoAbertas);
+    }
+
+
+    @GetMapping("/ordens-servico/finalizadas")
+    public ResponseEntity<List<OrdemServicoDTO>> listarOrdensServicoFinalizadas() {
+        List<OrdemServicoDTO> ordensServicoFinalizadas = ordemServicoService.listarOrdensServicoFinalizadas();
+        return ResponseEntity.ok(ordensServicoFinalizadas);
+    }
+
+    @GetMapping("/ordens-servico/filtradas")
+    public ResponseEntity<List<OrdemServicoDTO>> listarOrdensServicoFiltradas(@RequestParam String nomeCliente) {
+        List<OrdemServicoDTO> ordensServicoFiltradas = ordemServicoService.listarOrdensServicoFiltradas(nomeCliente);
+        return ResponseEntity.ok(ordensServicoFiltradas);
+    }
+
 }

@@ -17,6 +17,10 @@ public class VeiculoController {
     @Autowired
     private VeiculoService veiculoService;
 
+    public VeiculoController(VeiculoService veiculoService) {
+        this.veiculoService = veiculoService;
+    }
+
     @GetMapping
     public ResponseEntity<List<Veiculo>> listarVeiculos() {
         List<Veiculo> veiculos = veiculoService.listarVeiculos();
@@ -45,5 +49,11 @@ public class VeiculoController {
     public ResponseEntity<Void> deletarVeiculo(@PathVariable Long id) {
         veiculoService.deletarVeiculo(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<VeiculoDTO>> listarVeiculosPorModelo(@RequestParam String modelo) {
+        List<VeiculoDTO> veiculosDTO = veiculoService.listarVeiculosPorModelo(modelo);
+        return ResponseEntity.ok(veiculosDTO);
     }
 }
